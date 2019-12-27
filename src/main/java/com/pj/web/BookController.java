@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pj.exception.EntityNotFoundException;
 import com.pj.persistence.model.Book;
 import com.pj.persistence.repo.BookRepository;
 
@@ -31,7 +32,7 @@ public class BookController {
    
 	@GetMapping("/{id}")
 	public Book getBookById(@PathVariable long id) {
-		return bookRepository.getOne(id);
+		return bookRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Book not found with ID "+id));
 	}
 
 	@PostMapping
@@ -43,11 +44,14 @@ public class BookController {
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable long id) {
+		bookRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Book not found with ID "+id));
 		bookRepository.deleteById(id);
 	}
 	
 	@PutMapping
 	public void update(@RequestBody Book book) {
+		long id=book.getBookId();
+		bookRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Book not found with ID "+id));
 		bookRepository.saveAndFlush(book);
 	}
 

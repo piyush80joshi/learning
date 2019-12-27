@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.pj.persistence.model.Book;
 import com.pj.persistence.model.Subject;
-import com.pj.persistence.repo.BookRepository;
-import com.pj.persistence.repo.SubjectRepository;
+import com.pj.service.SubjectService;
 
 @CrossOrigin(origins = "http://localhost:4200") 
 @RequestMapping("/api/subjects")
@@ -24,33 +22,33 @@ import com.pj.persistence.repo.SubjectRepository;
 public class SubjectController {
 
 	@Autowired
-	SubjectRepository subjectRepository;
+	SubjectService subjectService;
 	
 	@GetMapping
 	public Iterable<Subject> getAllSubjects(){
-		return subjectRepository.findAll();
+		return subjectService.getAllSubjects();
 	}
    
 	@GetMapping("/{id}")
 	public Subject getSubjectById(@PathVariable long id) {
-		return subjectRepository.getOne(id);
+		return subjectService.getSubjectById(id);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Subject create(@RequestBody Subject subject) {
-		return subjectRepository.save(subject);
+		return subjectService.create(subject);
 	}
 	
 	
 	@DeleteMapping("/{id}")
 	public void delete(@PathVariable long id) {
-		subjectRepository.deleteById(id);
+		subjectService.delete(id);
 	}
 	
 	@PutMapping
 	public void update(@RequestBody Subject subject) {
-		subjectRepository.saveAndFlush(subject);
+		subjectService.update(subject);
 	}
 
 }
